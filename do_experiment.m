@@ -4,13 +4,20 @@ function do_experiment(modelname, configs)
      'VariableNames', {'id', 'modelName', 'expName', 'algoName', 'sampleTime',...
      'numEpisode', 'elapsedTime', 'bestRob'});
  global workers_num logDir;
+ workers_num = 1;  % Parallel Computing Toolbox を使わず直列実行する
  logFile = fullfile(logDir, [modelname, '.csv']);
  id = 1;
  if workers_num > 1
    while size(configs, 2) > 0
-     delete(gcp('nocreate'));
+     %delete(gcp('nocreate'));
+     if exist('gcp','file') == 2
+         p = gcp('nocreate');
+         if ~isempty(p)
+             delete(p);
+         end
+     end
      Simulink.sdi.clear
-     parpool(workers_num);
+     %parpool(workers_num);
      p = gcp();
      disp(size(configs, 2));
      clear F;
